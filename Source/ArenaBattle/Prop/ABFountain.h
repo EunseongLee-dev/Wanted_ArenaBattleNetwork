@@ -24,9 +24,15 @@ protected:
 	// 액터 채널이 열릴 때 호출되는 함수
 	virtual void OnActorChannelOpen(class FInBunch& InBunch, class UNetConnection* Connection) override;
 
+	// 연관성 검사 함수
+	virtual bool IsNetRelevantFor(const AActor* RealViewer, const AActor* ViewTarget, const FVector& SrcLocation) const override;
+
 	// 속성이 변경됐을 때 호출될 함수 지정
 	UFUNCTION()
 	void OnRep_ServerRotationYaw();
+
+	UFUNCTION()
+	void OnRep_ServerLightColor();
 
 	// 리플리케이션 옵션을 지정한 속성 추가
 	UPROPERTY(ReplicatedUsing = OnRep_ServerRotationYaw)
@@ -34,6 +40,24 @@ protected:
 
 	// 회전 속도 변수
 	float RotationRate = 30.0f;
+
+	// 서버로부터 패킷을 받은 후에 경과한 시간을 계산하기 위한 변수
+	float ClientTimeSinceUpdate = 0.0f;
+
+	// 서버로부터 데이터를 받고 그 다음 데이터를 받았을 때까지 걸린 시간을 기록할 변수
+	float ClientTimeBetweenLastUpdate = 0.0f;
+
+	// 의도적으로 네트워크 포화상태를 만들기 위한 변수
+	//UPROPERTY(Replicated)
+	//TArray<float> BigData;
+	//
+	//// 값 변경에 사용할 변수
+	//float BigDataElement = 0.0f;
+
+	// 라이트 색상 속성 ( 휴면 상태 테스트)
+	UPROPERTY(ReplicatedUsing = OnRep_ServerLightColor)
+	FLinearColor ServerLightColor;
+
 
 public:	
 	// Called every frame
