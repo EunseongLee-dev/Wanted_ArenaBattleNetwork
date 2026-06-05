@@ -231,7 +231,7 @@ void AABFountain::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 
 void AABFountain::OnRep_ServerRotationYaw()
 {
-	AB_LOG(LogABNetwork, Log, TEXT("Yaw: %f"), ServerRotationYaw);
+	//AB_LOG(LogABNetwork, Log, TEXT("Yaw: %f"), ServerRotationYaw);
 
 	// 서버에서 전달 받은 회전 값을 설정할 회전 값 생성
 	FRotator NewRotator = RootComponent->GetComponentRotation();
