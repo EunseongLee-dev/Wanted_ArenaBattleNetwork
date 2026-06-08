@@ -14,7 +14,7 @@ UABCharacterStatComponent::UABCharacterStatComponent()
 
 	bWantsInitializeComponent = true;
 
-	// 리플리케이션 활성화
+	// 리플리케이션 활성화.
 	SetIsReplicated(true);
 }
 
@@ -40,25 +40,26 @@ void UABCharacterStatComponent::ReadyForReplication()
 	Super::ReadyForReplication();
 }
 
-void UABCharacterStatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+void UABCharacterStatComponent::GetLifetimeReplicatedProps(
+	TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UABCharacterStatComponent, CurrentHp);
 }
 
-// OnRep_ 함수는 클라이언트에서만 호출
-// 서버로부터 값을 받았을 때 기존과 다를 때 호출됨 (콜백)
-// 따라서 Hp가 변경되었을 때 필요한 로직 수행 
+// OnRep_ 함수는 클라이언트에서만 호출.
+// 서버로부터 값을 받았을 때 기존과 다를 때 호출됨 ( 콜백 ).
+// 따라서 Hp가 변경되었을 때 필요한 로직 수행.
 void UABCharacterStatComponent::OnRep_CurrentHp()
 {
 	AB_SUBLOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
 
 	// 이미 서버로부터 갱신된 CurrentHp 값을 받았기 때문에
-	// 델리게이트를 통해서 전달
+	// 델리게이트를 통해서 전달.
 	OnHpChanged.Broadcast(CurrentHp);
 
-	// 죽음 판정
+	// 죽음 판정.
 	if (CurrentHp <= KINDA_SMALL_NUMBER)
 	{
 		OnHpZero.Broadcast();

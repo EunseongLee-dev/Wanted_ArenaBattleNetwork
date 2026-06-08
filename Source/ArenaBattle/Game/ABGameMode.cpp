@@ -37,7 +37,7 @@ void AABGameMode::OnPlayerDead()
 //	const FUniqueNetIdRepl& UniqueId,
 //	FString& ErrorMessage)
 //{
-//	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("=========================="));
+//	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT//("=========================="));
 //	AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("Begin"));
 //
 //	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
@@ -62,7 +62,7 @@ void AABGameMode::OnPlayerDead()
 //		// 클라이언트의 접속이 없는 경우.
 //		if (NetDriver->ClientConnections.Num() == 0)
 //		{
-//			AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("No Client Connection"));
+//			AB_LOG(LogABNetwork, Log, TEXT("%s"), TEXT("No Client //Connection"));
 //		}
 //		// 클라이언트의 접속이 있는 경우.
 //		else

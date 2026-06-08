@@ -25,8 +25,8 @@ public:
 	//	const FString& Address, 
 	//	const FUniqueNetIdRepl& UniqueId, 
 	//	FString& ErrorMessage) override;
-
+	//
 	//virtual void PostLogin(APlayerController* NewPlayer) override;
-
+	//
 	//virtual void StartPlay() override;
 };

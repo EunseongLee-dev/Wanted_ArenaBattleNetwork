@@ -23,8 +23,9 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetDead() override;
 	virtual void PossessedBy(AController* NewController) override;
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
+	virtual void GetLifetimeReplicatedProps(
+		TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -72,25 +73,67 @@ protected:
 
 	void Attack();
 
+	// 공격 애니메이션 재생 함수.
+	void PlayAttackAnimation();
+
+	// 공격 처리 관련 인터페이스 함수 오버라이드.
 	virtual void AttackHitCheck() override;
 
-	// 공격 명령 처리를 위한 ServerRPC
-	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerRPCAttack();
+	// 공격 판정 확인 함수
+	void AttackHitConfirm(AActor* HitActor);
 
-	// 서버 포함, 클라이언트에 공격 명령 전달을 위한 멀티캐스트 RPC
-	UFUNCTION(NetMulticast, Reliable)
+	// Debug Draw 함수
+	void DrawDebugAttackRange(const FColor& DrawColor, FVector TraceStart, FVector TraceEnd, FVector Forward);
+
+	// 공격 명령 처리를 위한 ServerRPC.
+	// 클라이언트가 서버로 요청할 때 요청한 시간을 보내도록.
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerRPCAttack(float AttackStartTime);
+
+	// 서버 포함, 클라이언트에 공격 명령 전달을 위한 멀티캐스트 RPC.
+	UFUNCTION(NetMulticast, Unreliable)
 	void MulticastRPCAttack();
+
+	// 공격 애니메이션 재생 요청 클라이언트 RPC
+	UFUNCTION(Client, Unreliable)
+	void ClientRPCPlayAnimation(AABCharacterPlayer* CharacterToPlay);
+
+	// 클라이언트에서 공격 판정을 했을 때 충돌한 경우 실행.
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerRPCNotifyHit(
+		const FHitResult& HitResult, float HitCheckTime
+	);
+
+	// 클라이언트에서 공격 판정을 했을 때 충돌하지 않은 경우 실행.
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerRPCNotifyMiss(
+		FVector_NetQuantize TraceStart,
+		FVector_NetQuantize TraceEnd,
+		FVector_NetQuantize TraceDir,
+		float HitCheckTime
+	);
 
 	UFUNCTION()
 	void OnRep_CanAttack();
 
-	// 공격 중인지 여부를 나타내는 플래그
+	// 공격 중인지 여부를 나타내는 플래그 (부울).
 	UPROPERTY(ReplicatedUsing = OnRep_CanAttack)
 	uint8 bCanAttack : 1;
 
-	// 애니메이션 재생 길이 값 (타이머에 시간 값으로 활용)
+	// 애니메이션 재생 길이 값 ( 타이머에 시간 값으로 활용 ).
 	float AttackTime = 1.4667f;
+
+	// 이전에 공격한 시간을 기록하는 변수.
+	float LastAttackStartTime = 0.0f;
+
+	// 클라이언트와 서버의 시간 차이를 기록하기 위한 변수.
+	float AttackTimeDifference = 0.0f;
+
+	// 공격 판정에 사용할 거리 값.
+	float AcceptCheckDistance = 300.0f;
+
+	// 공격을 시도하는 시간 간격에 문제가 없는지 검증을 위한 변수
+	float AcceptMinCheckTime = 0.15f;
 
 // UI Section
 protected:

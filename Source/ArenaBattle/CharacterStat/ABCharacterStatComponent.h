@@ -25,7 +25,8 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void ReadyForReplication() override;
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(
+		TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION()
 	void OnRep_CurrentHp();
