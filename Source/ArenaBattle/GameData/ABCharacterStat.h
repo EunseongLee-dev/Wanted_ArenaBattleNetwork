@@ -43,4 +43,46 @@ public:
 
 		return Result;
 	}
+
+	bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess)
+	{
+		// 저장
+		uint32 uMaxHp = (uint32)MaxHp;
+		Ar.SerializeIntPacked(uMaxHp);
+		MaxHp = (float)uMaxHp;
+
+		// 저장
+		uint32 uAttack = (uint32)Attack;
+		Ar.SerializeIntPacked(uAttack);
+		Attack = (float)uAttack;
+
+		// 저장
+		uint32 uAttackRange = (uint32)AttackRange;
+		Ar.SerializeIntPacked(uAttack);
+		AttackRange = (float)uAttackRange;
+
+		// 저장
+		uint32 uAttackSpeed = (uint32)AttackSpeed;
+		Ar.SerializeIntPacked(uAttackSpeed);
+		AttackSpeed = (float)uAttackSpeed;
+
+		// 저장
+		uint32 uMovementSpeed = (uint32)MovementSpeed;
+		Ar.SerializeIntPacked(uMovementSpeed);
+		MovementSpeed = (float)uMovementSpeed;
+
+		return true;
+	}
+};
+
+// NetSerialize 함수 사용을 위한 선언
+// 템플릿 특수화 ( template<> )
+template<>
+struct TStructOpsTypeTraits<FABCharacterStat>
+	: public TStructOpsTypeTraitsBase2<FABCharacterStat>
+{
+	enum
+	{
+		WithNetSerializer = true
+	};
 };

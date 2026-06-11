@@ -13,7 +13,7 @@ class ARENABATTLE_API AABItemBox : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	AABItemBox();
+	AABItemBox(); 
 
 	FORCEINLINE class UBoxComponent* GetTrigger() { return Trigger; }
 
